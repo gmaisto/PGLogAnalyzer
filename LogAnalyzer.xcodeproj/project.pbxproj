@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		07635F0C1D54FDD0005EA86A /* logdigester.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 07635F0A1D54FDD0005EA86A /* logdigester.cpp */; };
+		07635F0F1D5520FF005EA86A /* statement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 07635F0D1D5520FF005EA86A /* statement.cpp */; };
 		07A42DA31CAEB70600EE8337 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 07A42DA21CAEB70600EE8337 /* main.cpp */; };
 /* End PBXBuildFile section */
 
@@ -23,8 +25,14 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		07635F0A1D54FDD0005EA86A /* logdigester.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = logdigester.cpp; sourceTree = "<group>"; };
+		07635F0B1D54FDD0005EA86A /* logdigester.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = logdigester.hpp; sourceTree = "<group>"; };
+		07635F0D1D5520FF005EA86A /* statement.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = statement.cpp; sourceTree = "<group>"; };
+		07635F0E1D5520FF005EA86A /* statement.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = statement.hpp; sourceTree = "<group>"; };
+		07635F111D5543F9005EA86A /* tuple.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = tuple.hpp; sourceTree = "<group>"; };
 		07A42D9F1CAEB70600EE8337 /* LogAnalyzer */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = LogAnalyzer; sourceTree = BUILT_PRODUCTS_DIR; };
 		07A42DA21CAEB70600EE8337 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		07B025121D55BB120079ED42 /* prettyprint.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = prettyprint.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +66,12 @@
 			isa = PBXGroup;
 			children = (
 				07A42DA21CAEB70600EE8337 /* main.cpp */,
+				07635F0A1D54FDD0005EA86A /* logdigester.cpp */,
+				07635F0B1D54FDD0005EA86A /* logdigester.hpp */,
+				07635F0D1D5520FF005EA86A /* statement.cpp */,
+				07635F0E1D5520FF005EA86A /* statement.hpp */,
+				07635F111D5543F9005EA86A /* tuple.hpp */,
+				07B025121D55BB120079ED42 /* prettyprint.hpp */,
 			);
 			path = LogAnalyzer;
 			sourceTree = "<group>";
@@ -88,7 +102,7 @@
 		07A42D971CAEB70600EE8337 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0730;
+				LastUpgradeCheck = 0800;
 				ORGANIZATIONNAME = "Luigi Maisto";
 				TargetAttributes = {
 					07A42D9E1CAEB70600EE8337 = {
@@ -119,6 +133,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				07A42DA31CAEB70600EE8337 /* main.cpp in Sources */,
+				07635F0C1D54FDD0005EA86A /* logdigester.cpp in Sources */,
+				07635F0F1D5520FF005EA86A /* statement.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -139,8 +155,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "-";
@@ -183,8 +201,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "-";
@@ -209,6 +229,8 @@
 		07A42DA71CAEB70600EE8337 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				ENABLE_TESTABILITY = NO;
 				"HEADER_SEARCH_PATHS[arch=*]" = /usr/local/include;
 				"LIBRARY_SEARCH_PATHS[arch=*]" = /usr/local/lib;
 				OTHER_LDFLAGS = "-lboost_program_options";
@@ -219,8 +241,11 @@
 		07A42DA81CAEB70600EE8337 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				ENABLE_TESTABILITY = NO;
 				"HEADER_SEARCH_PATHS[arch=*]" = /usr/local/include;
 				"LIBRARY_SEARCH_PATHS[arch=*]" = /usr/local/lib;
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = "-lboost_program_options";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -245,6 +270,7 @@
 				07A42DA81CAEB70600EE8337 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

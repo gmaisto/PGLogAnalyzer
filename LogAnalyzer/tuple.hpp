@@ -24,31 +24,67 @@
 
 using namespace boost::accumulators;
 
+namespace Tuple {
+    struct Stats {
+        std::size_t samples;
+        float mean;
+        float median;
+        float variance;
+        float min;
+        float max;
+    };
+
 class Tuple {
+
 public:
-    Tuple(Statement const& st = {}): statement(st), _count(0L) {
-        //timings.push_back(st.getDuration());
-    }
+    Tuple(Statement const& st = {}): statement(st), _count(0L) { }
+
     long getCount() {return _count;}
+
     std::vector<float>& getTimings() {
         std::sort(timings.begin(), timings.end(), std::greater<float>());
         return timings; }
+
     void addTiming(float const& runtime) {timings.push_back(runtime);}
+
     Statement getStatement() {return statement;}
+
     void addOneToCount() {
         _count += 1;
     }
-    std::tuple<std::size_t, float, float, float, float, float> getStats() {
+
+    Stats getStatistics() {
+        accumulator_set<float, features<tag::count, tag::min, tag::max, tag::mean, tag::variance, tag::median(with_p_square_quantile)> > acc;
+        for_each(timings.begin(), timings.end(), boost::bind<void>(boost::ref(acc), _1));
+        stats.samples = count(acc);
+        stats.median = median(acc);
+        stats.variance = variance(acc);
+        stats.max = max(acc);
+        stats.min = min(acc);
+        stats.mean = mean(acc);
+        return stats;
+    }
+
+   /* std::tuple<std::size_t, float, float, float, float, float> getStats() {
         accumulator_set<float, features<tag::count, tag::min, tag::max, tag::mean, tag::variance, tag::median(with_p_square_quantile)> > acc;
         for_each(timings.begin(), timings.end(), boost::bind<void>(boost::ref(acc), _1));
         
         return std::make_tuple(count(acc), min(acc), max(acc), mean(acc), variance(acc), median(acc));
-    }
+    }*/
+
+
+
 private:
+    
     Statement statement;
     long _count;
     std::vector<float> timings;
+    Stats stats;
     
 };
+
+};
+
+
 
 #endif /* tuple_hpp */

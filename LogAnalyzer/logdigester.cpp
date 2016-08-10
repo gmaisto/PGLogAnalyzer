@@ -22,9 +22,19 @@
 #include "prettyprint.hpp"
 
 
+std::ostream& operator<<(std::ostream& os,  Tuple::Tuple& obj)
+{
+    Tuple::Stats stats = obj.getStatistics();
+    os << "Count: " << stats.samples << " Min: " << stats.min << " Max: " << stats.max << " Mean: " << stats.mean << " Var: " << stats.variance << " Median " << stats.median << '\n';
+
+    return os;
+}
+
+
+
 void digester::digest() {
     
-  long lines = 0L;
+  
   bool newline = true;
     
   
@@ -36,7 +46,7 @@ void digester::digest() {
   std::regex rx("duration: (\\d+\\.\\d+) ms.+statement: (.+)");
     
   for ( auto filename : logs ) {
-    std::ifstream file(filename); // pass file name as argment
+    std::ifstream file(filename); 
     
     while (file && getline(file, linebuffer)){
       if (linebuffer.length() == 0)continue;
@@ -50,15 +60,16 @@ void digester::digest() {
                     
             float rt = std::stof(res[1]);
             Statement st(res[2], rt);
-                    
-            if(!digestMap.count(st.getHash())) {
-              Tuple _tuple(st);
+           // std::size_t _chash = st.getHash();
+
+            if(!digestMap.count(res[2])) {
+              Tuple::Tuple _tuple(st);
               _tuple.addOneToCount();
               _tuple.addTiming(rt);
-              digestMap[st.getHash()] = _tuple;
+              digestMap[res[2]] = _tuple;
             } else {
-              digestMap[st.getHash()].addOneToCount();
-              digestMap[st.getHash()].addTiming(rt);
+              digestMap[res[2]].addOneToCount();
+              digestMap[res[2]].addTiming(rt);
             }
           }
         }
@@ -136,9 +147,16 @@ void digester::digest() {
   std::cout << "Map Elements: " << digestMap.size() << std::endl;
     
   for(auto i : digestMap) {
-    std::cout << i.first << "    " << i.second.getCount() << i.second.getTimings() << std::endl;
-      auto stats = i.second.getStats();
-      std::cout << "Count: " << std::get<0>(stats) << " Min: " << std::get<1>(stats) << " Max: " << std::get<2>(stats) << " Mean: " << std::get<3>(stats) << " Var: " << std::get<4>(stats) << " Median " << std::get<5>(stats) << std::endl;
+      //<< i.first 
+    std::cout << "\nRun: " << i.second.getCount() <<  "\nTimings: " << i.second.getTimings() << '\n';
+      /* auto stats = i.second.getStats();
+      std::cout << "Count: " << std::get<0>(stats) << " Min: " << std::get<1>(stats) << " Max: " << std::get<2>(stats) << " Mean: " << std::get<3>(stats) << " Var: " << std::get<4>(stats) << " Median " << std::get<5>(stats) << '\n';
+      std::cout << i.second.getStatement().statement() << std::endl; */
+
+      /* Tuple::Stats stats = i.second.getStatistics();
+      std::cout << "Count: " << stats.samples << " Min: " << stats.min << " Max: " << stats.max << " Mean: " << stats.mean << " Var: " << stats.variance << " Median " << stats.median << '\n'; */
+      std::cout << i.second << std::endl;
+
   }
 
 }

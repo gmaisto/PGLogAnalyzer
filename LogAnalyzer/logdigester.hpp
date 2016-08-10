@@ -14,18 +14,27 @@
 #include "statement.hpp"
 #include "tuple.hpp"
 
+
 class digester {
     std::string filename;
     std::vector<std::string> logs;
     std::vector<std::string> zlogs;
-    std::unordered_map<std::size_t, Tuple> digestMap;
-    
+    std::unordered_map<std::string, Tuple::Tuple> digestMap;
+    long lines;
+
 public:
-    digester(const std::string& name): filename(name) {}
-    digester(const std::vector<std::string>& lfiles): logs(lfiles){}
+    digester(const std::string& name): filename(name), lines(0L) {}
+    digester(const std::vector<std::string>& lfiles): logs(lfiles), lines(0L) {}
     
     void digest();
-    
+
+    long getLines() const { return lines; }
+
+    std::unordered_map<std::string, Tuple::Tuple> getDigestMap() {
+        return digestMap;
+    }
+
 };
+
 
 #endif /* logdigester_hpp */
