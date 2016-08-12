@@ -15,22 +15,27 @@
 #include "tuple.hpp"
 
 
+
+
 class digester {
     std::string filename;
     std::vector<std::string> logs;
     std::vector<std::string> zlogs;
     std::unordered_map<std::string, Tuple::Tuple> digestMap;
     long lines;
+    bool worked;
 
 public:
-    digester(const std::string& name): filename(name), lines(0L) {}
-    digester(const std::vector<std::string>& lfiles): logs(lfiles), lines(0L) {}
+    digester(const std::string& name): filename(name), lines(0L), worked(false) {}
+    digester(const std::vector<std::string>& lfiles): logs(lfiles), lines(0L), worked(false) {}
     
     void digest();
 
     long getLines() const { return lines; }
 
-    std::unordered_map<std::string, Tuple::Tuple> getDigestMap() {
+    bool getWorked() const { return worked; }
+
+    std::unordered_map<std::string, Tuple::Tuple>  getDigestMap() const {
         return digestMap;
     }
 

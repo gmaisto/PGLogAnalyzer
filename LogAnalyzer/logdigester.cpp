@@ -18,17 +18,9 @@
 #include <regex>
 #include <vector>
 #include "statement.hpp"
-#include "tuple.hpp"
 #include "prettyprint.hpp"
 
 
-std::ostream& operator<<(std::ostream& os,  Tuple::Tuple& obj)
-{
-    Tuple::Stats stats = obj.getStatistics();
-    os << "Count: " << stats.samples << " Min: " << stats.min << " Max: " << stats.max << " Mean: " << stats.mean << " Var: " << stats.variance << " Median " << stats.median << '\n';
-
-    return os;
-}
 
 
 
@@ -141,22 +133,24 @@ void digester::digest() {
         
     }
   */
-    
-    
-  std::cout << "Lines found: " << lines << std::endl;
-  std::cout << "Map Elements: " << digestMap.size() << std::endl;
-    
-  for(auto i : digestMap) {
-      //<< i.first 
-    std::cout << "\nRun: " << i.second.getCount() <<  "\nTimings: " << i.second.getTimings() << '\n';
-      /* auto stats = i.second.getStats();
-      std::cout << "Count: " << std::get<0>(stats) << " Min: " << std::get<1>(stats) << " Max: " << std::get<2>(stats) << " Mean: " << std::get<3>(stats) << " Var: " << std::get<4>(stats) << " Median " << std::get<5>(stats) << '\n';
-      std::cout << i.second.getStatement().statement() << std::endl; */
 
-      /* Tuple::Stats stats = i.second.getStatistics();
-      std::cout << "Count: " << stats.samples << " Min: " << stats.min << " Max: " << stats.max << " Mean: " << stats.mean << " Var: " << stats.variance << " Median " << stats.median << '\n'; */
-      std::cout << i.second << std::endl;
 
-  }
+  worked = true; // set the flag to true.
+    
+//  std::cout << "Lines found: " << lines << std::endl;
+//  std::cout << "Map Elements: " << digestMap.size() << std::endl;
+//    
+//  for(auto i : digestMap) {
+//      //<< i.first 
+//    std::cout << "\nRun: " << i.second.getCount() <<  "\nTimings: " << i.second.getTimings() << '\n';
+//      /* auto stats = i.second.getStats();
+//      std::cout << "Count: " << std::get<0>(stats) << " Min: " << std::get<1>(stats) << " Max: " << std::get<2>(stats) << " Mean: " << std::get<3>(stats) << " Var: " << std::get<4>(stats) << " Median " << std::get<5>(stats) << '\n';
+//      std::cout << i.second.getStatement().statement() << std::endl; */
+//
+//      /* Tuple::Stats stats = i.second.getStatistics();
+//      std::cout << "Count: " << stats.samples << " Min: " << stats.min << " Max: " << stats.max << " Mean: " << stats.mean << " Var: " << stats.variance << " Median " << stats.median << '\n'; */
+//      std::cout << i.second << std::endl;
+//
+//  }
 
 }

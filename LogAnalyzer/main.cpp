@@ -7,10 +7,15 @@
 //
 
 #include <iostream>
+#include <fstream>
 #include <boost/program_options.hpp>
 #include <string>
 #include <vector>
 #include "logdigester.hpp"
+#include "prettyprint.hpp"
+#include "outputter.hpp"
+
+extern const char* VERSION;
 
 
 
@@ -20,7 +25,6 @@ namespace
     const size_t ERROR_IN_COMMAND_LINE = 1;
     const size_t SUCCESS = 0;
     const size_t ERROR_UNHANDLED_EXCEPTION = 2;
-    const char* VERSION = "0.9 beta";
 
 } // namespace
 
@@ -34,7 +38,6 @@ int main(int argc, const char * argv[]) {
     
     std::vector<std::string> svect;
 
-    
     // Declare the supported options.
     po::options_description desc("Options");
 
@@ -46,6 +49,9 @@ int main(int argc, const char * argv[]) {
     ("version,v", "show program version")
     ("log,f", po::value< std::vector<std::string> >()->multitoken(), "log files")
     ("server,S", po::value<std::string>(),"start http server on 127.0.0.1:8088")
+    ("output,o", po::value<std::string>(),"output file")
+    ("csv,", po::value<std::string>(),"csv format output file")
+    ("html,", po::value<std::string>(),"html output file")
     ("zlog,Z", po::value< std::vector<std::string> >()->multitoken(), "gzipped log files")
     ;
 
@@ -73,13 +79,56 @@ int main(int argc, const char * argv[]) {
             std::cout << s << std::endl;
         }
     }
-    
-    if(vm.count("log")) {
-        digester myDigester(vm["log"].as< std::vector<std::string> >());
-        myDigester.digest();
+
+    std::ofstream fout;
+    std::streambuf *backup;
+
+    backup = std::cout.rdbuf(); // if not required the output goes on STDOUT
+    //std::ostream gout(buf);
+
+    if(vm.count("output")) {
+        try {
+            fout.open( vm["output"].as<std::string>() );
+            if(!fout.is_open()) {
+                return ERROR_IN_COMMAND_LINE;
+            } else {
+                std::cout.rdbuf(fout.rdbuf());
+            }
+        } catch(std::exception& e) {
+            std::cout << "Error: " << e.what() << std::endl;
+            return ERROR_IN_COMMAND_LINE;
+        }
     }
 
 
+    if(vm.count("log")) {
+        digester myDigester(vm["log"].as< std::vector<std::string> >());
+        myDigester.digest();
+        Output::Target ot = Output::Target::stdout;
+        std::string fileout = "pgloganalizer_output.txt";
+        
+        if(vm.count("output")) {
+            ot = Output::Target::txt;
+            fileout = vm["output"].as<std::string>();
+        } else if(vm.count("html")) {
+            ot = Output::Target::html;
+            fileout = vm["html"].as<std::string>();
+        } else if(vm.count("csv")) {
+            ot = Output::Target::csv;
+            fileout = vm["csv"].as<std::string>();
+        }
+
+        Outputter pgout(myDigester, ot, fileout);
+
+        pgout.Produce();
+
+      }
+
+    if(vm.count("output")) {
+        //std::cerr << "Closing file" << std::endl;
+        fout.close();
+        std::cout.rdbuf(backup);
+    }
 
     if (vm.count("server")) {
         std::cout << "Http server start on: " << vm["server"].as<std::string>() << ".\n";
@@ -98,5 +147,8 @@ int main(int argc, const char * argv[]) {
         std::cout << "Unknown error: " << e.what() << std::endl;
         return ERROR_UNHANDLED_EXCEPTION;
     }
+
+
+
     return SUCCESS;
 }
