@@ -25,34 +25,34 @@
 
 
 void digester::digest() {
-    
-  
+
+
   bool newline = true;
-    
-  
+
+
   std::string linebuffer;
   std::string fulline;
   std::regex expr("\\s+");
   std::string fmt{" "};
   std::cmatch res;
   std::regex rx("duration: (\\d+\\.\\d+) ms.+statement: (.+)");
-    
+
   for ( auto filename : logs ) {
-    std::ifstream file(filename); 
-    
+    std::ifstream file(filename);
+
     while (file && getline(file, linebuffer)){
       if (linebuffer.length() == 0)continue;
       if (boost::algorithm::starts_with(linebuffer, "LOG")) {
         if(newline == false) {
-                
+
           std::string str = std::regex_replace(fulline, expr, fmt);
-                
-                
+
+
           if(std::regex_search(str.c_str(), res, rx)) {
-                    
+
             float rt = std::stof(res[1]);
             Statement st(res[2], rt);
-           // std::size_t _chash = st.getHash();
+            // std::size_t _chash = st.getHash();
 
             if(!digestMap.count(res[2])) {
               Tuple::Tuple _tuple(st);
@@ -73,38 +73,38 @@ void digester::digest() {
         newline = false;
       }
     }
-        
+
   }
   /*
-    
+
     for ( auto filename : zlogs ) {
     std::ifstream file(filename,std::ios_base::in | std::ios_base::binary);
-        
+
     try {
     boost::iostreams::filtering_istream in;
     in.push(boost::iostreams::gzip_decompressor());
     in.push(file);
-     
+
     for(std::string istr; std::getline(in, istr); )
     {
     if (istr.length() == 0)continue;
-                
+
     if (boost::algorithm::starts_with(istr, "LOG")) {
     if(newline == false) {
-                        
+
     std::string nstr = std::regex_replace(fulline, expr, fmt);
-                        
-                        
+
+
     if(std::regex_search(nstr.c_str(), res, rx)) {
     //std::cout << res[1] << " " << res[2] << "\n";
-                            
+
     // if(str.find("statement: ") != std::string::npos) {
     //     std::string realstatement = str.substr(str.find("statement: ") + 11);
-                            
-                            
+
+
     float rt = std::stof(res[1]);
     Statement st(res[2], rt);
-                            
+
     if(!digestMap.count(st.getHash())) {
     Tuple _tuple(st);
     _tuple.addOneToCount();
@@ -129,28 +129,28 @@ void digester::digest() {
     catch(const boost::iostreams::gzip_error& e) {
     std::cout << e.what() << '\n';
     }
-        
-        
+
+
     }
   */
 
 
   worked = true; // set the flag to true.
-    
-//  std::cout << "Lines found: " << lines << std::endl;
-//  std::cout << "Map Elements: " << digestMap.size() << std::endl;
-//    
-//  for(auto i : digestMap) {
-//      //<< i.first 
-//    std::cout << "\nRun: " << i.second.getCount() <<  "\nTimings: " << i.second.getTimings() << '\n';
-//      /* auto stats = i.second.getStats();
-//      std::cout << "Count: " << std::get<0>(stats) << " Min: " << std::get<1>(stats) << " Max: " << std::get<2>(stats) << " Mean: " << std::get<3>(stats) << " Var: " << std::get<4>(stats) << " Median " << std::get<5>(stats) << '\n';
-//      std::cout << i.second.getStatement().statement() << std::endl; */
-//
-//      /* Tuple::Stats stats = i.second.getStatistics();
-//      std::cout << "Count: " << stats.samples << " Min: " << stats.min << " Max: " << stats.max << " Mean: " << stats.mean << " Var: " << stats.variance << " Median " << stats.median << '\n'; */
-//      std::cout << i.second << std::endl;
-//
-//  }
+
+  //  std::cout << "Lines found: " << lines << std::endl;
+  //  std::cout << "Map Elements: " << digestMap.size() << std::endl;
+  //
+  //  for(auto i : digestMap) {
+  //      //<< i.first
+  //    std::cout << "\nRun: " << i.second.getCount() <<  "\nTimings: " << i.second.getTimings() << '\n';
+  //      /* auto stats = i.second.getStats();
+  //      std::cout << "Count: " << std::get<0>(stats) << " Min: " << std::get<1>(stats) << " Max: " << std::get<2>(stats) << " Mean: " << std::get<3>(stats) << " Var: " << std::get<4>(stats) << " Median " << std::get<5>(stats) << '\n';
+  //      std::cout << i.second.getStatement().statement() << std::endl; */
+  //
+  //      /* Tuple::Stats stats = i.second.getStatistics();
+  //      std::cout << "Count: " << stats.samples << " Min: " << stats.min << " Max: " << stats.max << " Mean: " << stats.mean << " Var: " << stats.variance << " Median " << stats.median << '\n'; */
+  //      std::cout << i.second << std::endl;
+  //
+  //  }
 
 }

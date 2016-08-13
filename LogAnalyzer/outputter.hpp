@@ -15,25 +15,25 @@
 
 namespace Output {
 
-    enum Target {
-        stdout,
-        txt,
-        csv,
-        html
-    };
+  enum Target {
+    stdout,
+    txt,
+    csv,
+    html
+  };
 
 }
 
 class Outputter {
 private:
-    Output::Target type;
-    digester idg;
-    std::string dst;
+  Output::Target type;
+  digester idg;
+  std::string dst;
 
 public:
-    Outputter(digester const &dg, Output::Target otype, std::string const &ofile): type(otype), dst(ofile),idg(dg) {};
+  Outputter(digester const &dg, Output::Target otype, std::string const &ofile): type(otype), dst(ofile),idg(dg) {};
 
-    void Produce();
+  void Produce();
 
 };
 

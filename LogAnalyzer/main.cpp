@@ -22,9 +22,9 @@ extern const char* VERSION;
 
 namespace
 {
-    const size_t ERROR_IN_COMMAND_LINE = 1;
-    const size_t SUCCESS = 0;
-    const size_t ERROR_UNHANDLED_EXCEPTION = 2;
+  const size_t ERROR_IN_COMMAND_LINE = 1;
+  const size_t SUCCESS = 0;
+  const size_t ERROR_UNHANDLED_EXCEPTION = 2;
 
 } // namespace
 
@@ -35,87 +35,66 @@ namespace po = boost::program_options;
 
 
 int main(int argc, const char * argv[]) {
-    
-    std::vector<std::string> svect;
 
-    // Declare the supported options.
-    po::options_description desc("Options");
+  std::vector<std::string> svect;
 
-    try {
+  // Declare the supported options.
+  po::options_description desc("Options");
+
+  try {
 
 
     desc.add_options()
-    ("help", "produce help message")
-    ("version,v", "show program version")
-    ("log,f", po::value< std::vector<std::string> >()->multitoken(), "log files")
-    ("server,S", po::value<std::string>(),"start http server on 127.0.0.1:8088")
-    ("output,o", po::value<std::string>(),"output file")
-    ("csv,", po::value<std::string>(),"csv format output file")
-    ("html,", po::value<std::string>(),"html output file")
-    ("zlog,Z", po::value< std::vector<std::string> >()->multitoken(), "gzipped log files")
-    ;
+      ("help", "produce help message")
+      ("version,v", "show program version")
+      ("log,f", po::value< std::vector<std::string> >()->multitoken(), "log files")
+      ("server,S", po::value<std::string>(),"start http server on 127.0.0.1:8088")
+      ("output,o", po::value<std::string>(),"output file")
+      ("csv,", po::value<std::string>(),"csv format output file")
+      ("html,", po::value<std::string>(),"html output file")
+      ("zlog,Z", po::value< std::vector<std::string> >()->multitoken(), "gzipped log files")
+      ;
 
-    
+
     po::variables_map vm;
 
-        try {
-    po::store(po::parse_command_line(argc, argv, desc), vm);
-    po::notify(vm);
-    
-    if (vm.count("help")) {
+    try {
+      po::store(po::parse_command_line(argc, argv, desc), vm);
+      po::notify(vm);
+
+      if (vm.count("help")) {
         std::cout << desc << "\n";
         return SUCCESS;
-    }
+      }
 
-    if (vm.count("version")) {
+      if (vm.count("version")) {
         std::cout << VERSION << " (" << __TIMESTAMP__ << ')' << "\n";
         return SUCCESS;
-    }
+      }
 
 
-    if(vm.count("zlog")) {
+      if(vm.count("zlog")) {
         svect = vm["zlog"].as< std::vector<std::string> >();
         for(auto s : svect) {
-            std::cout << s << std::endl;
+          std::cout << s << std::endl;
         }
-    }
+      }
 
-    std::ofstream fout;
-    std::streambuf *backup;
-
-    backup = std::cout.rdbuf(); // if not required the output goes on STDOUT
-    //std::ostream gout(buf);
-
-    if(vm.count("output")) {
-        try {
-            fout.open( vm["output"].as<std::string>() );
-            if(!fout.is_open()) {
-                return ERROR_IN_COMMAND_LINE;
-            } else {
-                std::cout.rdbuf(fout.rdbuf());
-            }
-        } catch(std::exception& e) {
-            std::cout << "Error: " << e.what() << std::endl;
-            return ERROR_IN_COMMAND_LINE;
-        }
-    }
-
-
-    if(vm.count("log")) {
+      if(vm.count("log")) {
         digester myDigester(vm["log"].as< std::vector<std::string> >());
         myDigester.digest();
         Output::Target ot = Output::Target::stdout;
         std::string fileout = "pgloganalizer_output.txt";
-        
+
         if(vm.count("output")) {
-            ot = Output::Target::txt;
-            fileout = vm["output"].as<std::string>();
+          ot = Output::Target::txt;
+          fileout = vm["output"].as<std::string>();
         } else if(vm.count("html")) {
-            ot = Output::Target::html;
-            fileout = vm["html"].as<std::string>();
+          ot = Output::Target::html;
+          fileout = vm["html"].as<std::string>();
         } else if(vm.count("csv")) {
-            ot = Output::Target::csv;
-            fileout = vm["csv"].as<std::string>();
+          ot = Output::Target::csv;
+          fileout = vm["csv"].as<std::string>();
         }
 
         Outputter pgout(myDigester, ot, fileout);
@@ -124,31 +103,25 @@ int main(int argc, const char * argv[]) {
 
       }
 
-    if(vm.count("output")) {
-        //std::cerr << "Closing file" << std::endl;
-        fout.close();
-        std::cout.rdbuf(backup);
-    }
-
-    if (vm.count("server")) {
+      if (vm.count("server")) {
         std::cout << "Http server start on: " << vm["server"].as<std::string>() << ".\n";
-    }
+      }
 
-    
-    if(vm.empty()) {
+
+      if(vm.empty()) {
         std::cout << desc << std::endl;
-    }
-        } catch (po::error &e) {
-            std::cout << "Command line parse error: " << e.what() << std::endl;
-            return ERROR_IN_COMMAND_LINE;
-        }
-
-    } catch(std::exception& e) {
-        std::cout << "Unknown error: " << e.what() << std::endl;
-        return ERROR_UNHANDLED_EXCEPTION;
+      }
+    } catch (po::error &e) {
+      std::cout << "Command line parse error: " << e.what() << std::endl;
+      return ERROR_IN_COMMAND_LINE;
     }
 
+  } catch(std::exception& e) {
+    std::cout << "Unknown error: " << e.what() << std::endl;
+    return ERROR_UNHANDLED_EXCEPTION;
+  }
 
 
-    return SUCCESS;
+
+  return SUCCESS;
 }
