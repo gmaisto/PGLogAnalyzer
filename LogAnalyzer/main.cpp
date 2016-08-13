@@ -14,6 +14,7 @@
 #include "logdigester.hpp"
 #include "prettyprint.hpp"
 #include "outputter.hpp"
+#include "crow_all.h"
 
 extern const char* VERSION;
 
@@ -105,6 +106,13 @@ int main(int argc, const char * argv[]) {
 
       if (vm.count("server")) {
         std::cout << "Http server start on: " << vm["server"].as<std::string>() << ".\n";
+        crow::SimpleApp app;
+
+        CROW_ROUTE(app, "/")([](){
+              return "Hello world";
+        });
+
+        app.port(18080).multithreaded().run();
       }
 
 

@@ -26,6 +26,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		073A41991D5FA7F7003A8DC1 /* crow_all.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = crow_all.h; sourceTree = "<group>"; };
 		07635F0A1D54FDD0005EA86A /* logdigester.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = logdigester.cpp; sourceTree = "<group>"; };
 		07635F0B1D54FDD0005EA86A /* logdigester.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = logdigester.hpp; sourceTree = "<group>"; };
 		07635F0D1D5520FF005EA86A /* statement.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = statement.cpp; sourceTree = "<group>"; };
@@ -69,6 +70,7 @@
 		07A42DA11CAEB70600EE8337 /* LogAnalyzer */ = {
 			isa = PBXGroup;
 			children = (
+				073A41991D5FA7F7003A8DC1 /* crow_all.h */,
 				07A42DA21CAEB70600EE8337 /* main.cpp */,
 				07635F0A1D54FDD0005EA86A /* logdigester.cpp */,
 				07635F0B1D54FDD0005EA86A /* logdigester.hpp */,
@@ -241,7 +243,14 @@
 				ENABLE_TESTABILITY = NO;
 				"HEADER_SEARCH_PATHS[arch=*]" = /usr/local/include;
 				"LIBRARY_SEARCH_PATHS[arch=*]" = /usr/local/lib;
-				OTHER_LDFLAGS = "-lboost_program_options";
+				OTHER_LDFLAGS = (
+					"-lboost_program_options",
+					"-lboost_date_time",
+					"-lboost_thread-mt",
+					"-lboost_system",
+					"-lboost_regex",
+					"-lboost_filesystem",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -254,7 +263,14 @@
 				"HEADER_SEARCH_PATHS[arch=*]" = /usr/local/include;
 				"LIBRARY_SEARCH_PATHS[arch=*]" = /usr/local/lib;
 				ONLY_ACTIVE_ARCH = YES;
-				OTHER_LDFLAGS = "-lboost_program_options";
+				OTHER_LDFLAGS = (
+					"-lboost_program_options",
+					"-lboost_date_time",
+					"-lboost_thread-mt",
+					"-lboost_system",
+					"-lboost_regex",
+					"-lboost_filesystem",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
