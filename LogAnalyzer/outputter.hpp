@@ -22,6 +22,20 @@ namespace Output {
     html
   };
 
+    enum Sortpar {
+        mean,
+        max,
+        min,
+        median,
+        num
+    };
+
+    struct Filter {
+        Sortpar sp;
+        Target  tg;
+        int     lines;
+    };
+
 }
 
 class Outputter {
@@ -33,7 +47,7 @@ private:
 public:
   Outputter(digester const &dg, Output::Target otype, std::string const &ofile): type(otype), dst(ofile),idg(dg) {};
 
-  void Produce();
+    void Produce(Output::Filter &ft);
 
 };
 

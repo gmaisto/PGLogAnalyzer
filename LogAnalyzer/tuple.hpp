@@ -53,7 +53,7 @@ public:
         _count += 1;
     }
 
-    Stats getStatistics() {
+    Stats getStatistics()  {
         accumulator_set<float, features<tag::count, tag::min, tag::max, tag::mean, tag::variance, tag::median(with_p_square_quantile)> > acc;
         for_each(timings.begin(), timings.end(), boost::bind<void>(boost::ref(acc), _1));
         stats.samples = count(acc);

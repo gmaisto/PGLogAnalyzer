@@ -26,6 +26,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		072C18111D60C3B5006488B9 /* template.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = template.h; sourceTree = "<group>"; };
 		073A41991D5FA7F7003A8DC1 /* crow_all.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = crow_all.h; sourceTree = "<group>"; };
 		07635F0A1D54FDD0005EA86A /* logdigester.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = logdigester.cpp; sourceTree = "<group>"; };
 		07635F0B1D54FDD0005EA86A /* logdigester.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = logdigester.hpp; sourceTree = "<group>"; };
@@ -70,6 +71,7 @@
 		07A42DA11CAEB70600EE8337 /* LogAnalyzer */ = {
 			isa = PBXGroup;
 			children = (
+				072C18111D60C3B5006488B9 /* template.h */,
 				073A41991D5FA7F7003A8DC1 /* crow_all.h */,
 				07A42DA21CAEB70600EE8337 /* main.cpp */,
 				07635F0A1D54FDD0005EA86A /* logdigester.cpp */,

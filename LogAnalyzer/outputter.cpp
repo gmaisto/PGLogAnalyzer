@@ -39,27 +39,76 @@ std::basic_ostream<T>& comma_sep(std::basic_ostream<T>& os)
     return os;
 }
 
+// Sort Tuples by mean function
+bool sortByMean(const Tuple::Tuple &lhs, const Tuple::Tuple &rhs) {
+    auto first = const_cast<Tuple::Tuple&>(lhs).getStatistics();
+    auto second = const_cast<Tuple::Tuple&>(rhs).getStatistics();
+    return first.mean < second.mean;
+}
+
+// reverse Sort Tuples by mean function
+bool sortByMeanR(const Tuple::Tuple &lhs, const Tuple::Tuple &rhs) {
+    auto first = const_cast<Tuple::Tuple&>(lhs).getStatistics();
+    auto second = const_cast<Tuple::Tuple&>(rhs).getStatistics();
+    return first.mean > second.mean;
+}
+
+// Sort Tuples by max function
+bool sortByMax(const Tuple::Tuple &lhs, const Tuple::Tuple &rhs) {
+    auto first = const_cast<Tuple::Tuple&>(lhs).getStatistics();
+    auto second = const_cast<Tuple::Tuple&>(rhs).getStatistics();
+    return first.max < second.max;
+}
 
 
-void Outputter::Produce() {
+// Sort Tuples by count function
+bool sortByCount(const Tuple::Tuple &lhs, const Tuple::Tuple &rhs) {
+    auto first = const_cast<Tuple::Tuple&>(lhs).getStatistics();
+    auto second = const_cast<Tuple::Tuple&>(rhs).getStatistics();
+    return first.samples < second.samples;
+}
+
+bool sortByCountR(const Tuple::Tuple &lhs, const Tuple::Tuple &rhs) {
+    auto first = const_cast<Tuple::Tuple&>(lhs).getStatistics();
+    auto second = const_cast<Tuple::Tuple&>(rhs).getStatistics();
+    return first.samples > second.samples;
+}
+
+
+
+void Outputter::Produce(Output::Filter &ft) {
 
   std::ofstream fout;
 
-  if(type == Output::Target::stdout) {
+  if(ft.tg == Output::Target::stdout) {
     if(idg.getWorked() == true) {
       std::cout << "PGLogAnalyzer (" << VERSION << ")\n";
       std::cout << "Date: " << __TIMESTAMP__ << '\n';
       std::cout << "\nNumber of executed queries: "  << idg.getLines() << '\n';
       auto dm = idg.getDigestMap();
 
+      std::vector<Tuple::Tuple> values;
+      for(auto i : dm) {
+          values.push_back(i.second);
+      }
+
+      //sort vector of Tuples
+      std::sort(values.begin(), values.end(), sortByCountR);
 
       std::cout << "Number of different SQL Queries found: " << dm.size() << '\n' << std::endl;
 
-      for(auto i : dm) {
-        long eq = i.second.getCount();
-        std::cout << "Query Executed " << eq << ((eq > 1) ? " times." : " time.") << "\nTimings: " << i.second.getTimings() << '\n';
-        std::cout << i.second << std::endl;
+      for( int x = 0; x < ft.lines; x++) {
+            if(x > values.size())
+                break;
+          std::cout << values[x].getStatement().statement() << '\n';
+            std::cout << values[x] << std::endl;
       }
+
+//      for(auto i : dm) {
+//        long eq = i.second.getCount();
+//        std::cout << "Query Executed " << eq << ((eq > 1) ? " times." : " time.") << "\nTimings: " << i.second.getTimings() << '\n';
+//        std::cout << i.second << std::endl;
+//      }
     }
   } else if(type == Output::Target::txt) {
     if(idg.getWorked() == true) {

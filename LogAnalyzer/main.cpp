@@ -15,6 +15,8 @@
 #include "prettyprint.hpp"
 #include "outputter.hpp"
 #include "crow_all.h"
+#include "Mustache.hpp"
+#include "template.h"
 
 extern const char* VERSION;
 
@@ -81,8 +83,12 @@ int main(int argc, const char * argv[]) {
         }
       }
 
+      digester myDigester;
+      Output::Filter filter = {Output::Sortpar::mean, Output::Target::stdout, 5};
+
       if(vm.count("log")) {
-        digester myDigester(vm["log"].as< std::vector<std::string> >());
+        //digester myDigester(vm["log"].as< std::vector<std::string> >());
+        myDigester.setLogs(vm["log"].as< std::vector<std::string> >());
         myDigester.digest();
         Output::Target ot = Output::Target::stdout;
         std::string fileout = "pgloganalizer_output.txt";
@@ -98,22 +104,38 @@ int main(int argc, const char * argv[]) {
           fileout = vm["csv"].as<std::string>();
         }
 
-        Outputter pgout(myDigester, ot, fileout);
+        if(!vm.count("server")) {
+            Outputter pgout(myDigester, ot, fileout);
+            pgout.Produce(filter);
+        }
 
-        pgout.Produce();
+      }
 
+      if(vm.count("server") && !vm.count("log")) {
+            std::cerr << "Error: missing -log parameter" << std::endl;
+            return ERROR_IN_COMMAND_LINE;
       }
 
       if (vm.count("server")) {
-        std::cout << "Http server start on: " << vm["server"].as<std::string>() << ".\n";
-        crow::SimpleApp app;
+            std::cout << "Http server start on: " << vm["server"].as<std::string>() << ".\n";
+            crow::SimpleApp app;
 
-        CROW_ROUTE(app, "/")([](){
-              return "Hello world";
-        });
+            Kainjow::Mustache::Data data;
+            data.set("analysistime", myDigester.getRundate());
+            data.set("loglines", std::to_string(myDigester.getLines()));
+//
+            std::string response(std::begin(htmltemplate_html),std::end(htmltemplate_html));
+            CROW_ROUTE(app, "/")([&](){
+                Kainjow::Mustache tmpl(response);
 
-        app.port(18080).multithreaded().run();
+
+                return tmpl.render(data);
+                //  return response;
+            });
+            app.port(18080).run();
       }
+
+
 
 
       if(vm.empty()) {
