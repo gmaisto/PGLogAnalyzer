@@ -13,41 +13,46 @@
 #include <string>
 
 
-namespace Output {
+namespace Output
+{
 
-  enum Target {
-    stdout,
-    txt,
-    csv,
-    html
-  };
+enum Target
+{
+  stdout,
+  txt,
+  csv,
+  html
+};
 
-    enum Sortpar {
-        mean,
-        max,
-        min,
-        median,
-        num
-    };
+enum Sortpar
+{
+  mean,
+  max,
+  min,
+  median,
+  num
+};
 
-    struct Filter {
-        Sortpar sp;
-        Target  tg;
-        int     lines;
-    };
+struct Filter
+{
+  Sortpar sp;
+  Target  tg;
+  int     lines;
+};
 
 }
 
-class Outputter {
+class Outputter
+{
 private:
   Output::Target type;
   digester idg;
   std::string dst;
 
 public:
-  Outputter(digester const &dg, Output::Target otype, std::string const &ofile): type(otype), dst(ofile),idg(dg) {};
+  Outputter(digester const &dg, Output::Target otype, std::string const &ofile): type(otype), dst(ofile), idg(dg) {};
 
-    void Produce(Output::Filter &ft);
+  void Produce(Output::Filter &ft);
 
 };
 

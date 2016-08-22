@@ -24,133 +24,145 @@
 
 
 
-void digester::digest() {
+void digester::digest()
+{
 
 
-  bool newline = true;
+	bool newline = true;
 
 
-  std::string linebuffer;
-  std::string fulline;
-  std::regex expr("\\s+");
-  std::string fmt{" "};
-  std::cmatch res;
-  std::regex rx("duration: (\\d+\\.\\d+) ms.+statement: (.+)");
+	std::string linebuffer;
+	std::string fulline;
+	std::regex expr("\\s+");
+	std::string fmt{" "};
+	std::cmatch res;
+	std::regex rx("duration: (\\d+\\.\\d+) ms.+statement: (.+)");
 
-  for ( auto filename : logs ) {
-    std::ifstream file(filename);
+	for ( auto filename : logs )
+	{
+		std::ifstream file(filename);
 
-    while (file && getline(file, linebuffer)){
-      if (linebuffer.length() == 0)continue;
-      if (boost::algorithm::starts_with(linebuffer, "LOG")) {
-        if(newline == false) {
+		while (file && getline(file, linebuffer))
+		{
+			if (linebuffer.length() == 0)continue;
+			if (boost::algorithm::starts_with(linebuffer, "LOG"))
+			{
+				if (newline == false)
+				{
 
-          std::string str = std::regex_replace(fulline, expr, fmt);
-
-
-          if(std::regex_search(str.c_str(), res, rx)) {
-
-            float rt = std::stof(res[1]);
-            Statement st(res[2], rt);
-            // std::size_t _chash = st.getHash();
-
-            if(!digestMap.count(res[2])) {
-              Tuple::Tuple _tuple(st);
-              _tuple.addOneToCount();
-              _tuple.addTiming(rt);
-              digestMap[res[2]] = _tuple;
-            } else {
-              digestMap[res[2]].addOneToCount();
-              digestMap[res[2]].addTiming(rt);
-            }
-          }
-        }
-        newline = true;
-        fulline = linebuffer;
-        lines++;
-      } else {
-        fulline += linebuffer;
-        newline = false;
-      }
-    }
-
-  }
-  /*
-
-    for ( auto filename : zlogs ) {
-    std::ifstream file(filename,std::ios_base::in | std::ios_base::binary);
-
-    try {
-    boost::iostreams::filtering_istream in;
-    in.push(boost::iostreams::gzip_decompressor());
-    in.push(file);
-
-    for(std::string istr; std::getline(in, istr); )
-    {
-    if (istr.length() == 0)continue;
-
-    if (boost::algorithm::starts_with(istr, "LOG")) {
-    if(newline == false) {
-
-    std::string nstr = std::regex_replace(fulline, expr, fmt);
+					std::string str = std::regex_replace(fulline, expr, fmt);
 
 
-    if(std::regex_search(nstr.c_str(), res, rx)) {
-    //std::cout << res[1] << " " << res[2] << "\n";
+					if (std::regex_search(str.c_str(), res, rx))
+					{
 
-    // if(str.find("statement: ") != std::string::npos) {
-    //     std::string realstatement = str.substr(str.find("statement: ") + 11);
+						float rt = std::stof(res[1]);
+						Statement st(res[2], rt);
+						// std::size_t _chash = st.getHash();
+
+						if (!digestMap.count(res[2]))
+						{
+							Tuple::Tuple _tuple(st);
+							_tuple.addOneToCount();
+							_tuple.addTiming(rt);
+							digestMap[res[2]] = _tuple;
+						}
+						else
+						{
+							digestMap[res[2]].addOneToCount();
+							digestMap[res[2]].addTiming(rt);
+						}
+					}
+				}
+				newline = true;
+				fulline = linebuffer;
+				lines++;
+			}
+			else
+			{
+				fulline += linebuffer;
+				newline = false;
+			}
+		}
+
+	}
+	/*
+
+	  for ( auto filename : zlogs ) {
+	  std::ifstream file(filename,std::ios_base::in | std::ios_base::binary);
+
+	  try {
+	  boost::iostreams::filtering_istream in;
+	  in.push(boost::iostreams::gzip_decompressor());
+	  in.push(file);
+
+	  for(std::string istr; std::getline(in, istr); )
+	  {
+	  if (istr.length() == 0)continue;
+
+	  if (boost::algorithm::starts_with(istr, "LOG")) {
+	  if(newline == false) {
+
+	  std::string nstr = std::regex_replace(fulline, expr, fmt);
 
 
-    float rt = std::stof(res[1]);
-    Statement st(res[2], rt);
+	  if(std::regex_search(nstr.c_str(), res, rx)) {
+	  //std::cout << res[1] << " " << res[2] << "\n";
 
-    if(!digestMap.count(st.getHash())) {
-    Tuple _tuple(st);
-    _tuple.addOneToCount();
-    _tuple.addTiming(rt);
-    digestMap[st.getHash()] = _tuple;
-    } else {
-    digestMap[st.getHash()].addOneToCount();
-    digestMap[st.getHash()].addTiming(rt);
-    }
-    }
-    }
-    newline = true;
-    fulline = istr;
-    lines++;
-    } else {
-    fulline += istr;
-    newline = false;
-    }
-
-    }
-    }
-    catch(const boost::iostreams::gzip_error& e) {
-    std::cout << e.what() << '\n';
-    }
+	  // if(str.find("statement: ") != std::string::npos) {
+	  //     std::string realstatement = str.substr(str.find("statement: ") + 11);
 
 
-    }
-  */
+	  float rt = std::stof(res[1]);
+	  Statement st(res[2], rt);
+
+	  if(!digestMap.count(st.getHash())) {
+	  Tuple _tuple(st);
+	  _tuple.addOneToCount();
+	  _tuple.addTiming(rt);
+	  digestMap[st.getHash()] = _tuple;
+	  } else {
+	  digestMap[st.getHash()].addOneToCount();
+	  digestMap[st.getHash()].addTiming(rt);
+	  }
+	  }
+	  }
+	  newline = true;
+	  fulline = istr;
+	  lines++;
+	  } else {
+	  fulline += istr;
+	  newline = false;
+	  }
+
+	  }
+	  }
+	  catch(const boost::iostreams::gzip_error& e) {
+	  std::cout << e.what() << '\n';
+	  }
 
 
-  worked = true; // set the flag to true.
+	  }
+	*/
 
-  //  std::cout << "Lines found: " << lines << std::endl;
-  //  std::cout << "Map Elements: " << digestMap.size() << std::endl;
-  //
-  //  for(auto i : digestMap) {
-  //      //<< i.first
-  //    std::cout << "\nRun: " << i.second.getCount() <<  "\nTimings: " << i.second.getTimings() << '\n';
-  //      /* auto stats = i.second.getStats();
-  //      std::cout << "Count: " << std::get<0>(stats) << " Min: " << std::get<1>(stats) << " Max: " << std::get<2>(stats) << " Mean: " << std::get<3>(stats) << " Var: " << std::get<4>(stats) << " Median " << std::get<5>(stats) << '\n';
-  //      std::cout << i.second.getStatement().statement() << std::endl; */
-  //
-  //      /* Tuple::Stats stats = i.second.getStatistics();
-  //      std::cout << "Count: " << stats.samples << " Min: " << stats.min << " Max: " << stats.max << " Mean: " << stats.mean << " Var: " << stats.variance << " Median " << stats.median << '\n'; */
-  //      std::cout << i.second << std::endl;
-  //
-  //  }
+
+	worked = true; // set the flag to true.
+    queries = digestMap.size();
+
+	//  std::cout << "Lines found: " << lines << std::endl;
+	//  std::cout << "Map Elements: " << digestMap.size() << std::endl;
+	//
+	//  for(auto i : digestMap) {
+	//      //<< i.first
+	//    std::cout << "\nRun: " << i.second.getCount() <<  "\nTimings: " << i.second.getTimings() << '\n';
+	//      /* auto stats = i.second.getStats();
+	//      std::cout << "Count: " << std::get<0>(stats) << " Min: " << std::get<1>(stats) << " Max: " << std::get<2>(stats) << " Mean: " << std::get<3>(stats) << " Var: " << std::get<4>(stats) << " Median " << std::get<5>(stats) << '\n';
+	//      std::cout << i.second.getStatement().statement() << std::endl; */
+	//
+	//      /* Tuple::Stats stats = i.second.getStatistics();
+	//      std::cout << "Count: " << stats.samples << " Min: " << stats.min << " Max: " << stats.max << " Mean: " << stats.mean << " Var: " << stats.variance << " Median " << stats.median << '\n'; */
+	//      std::cout << i.second << std::endl;
+	//
+	//  }
 
 }

@@ -19,7 +19,7 @@ private:
   std::size_t hash;
 
 public:
-  Statement(std::string s = "", float const& runtime = 0.0): stmt(s) {
+  Statement(std::string const &s = "", float const& runtime = 0.0): stmt(s) {
     //hash = std::hash<std::string>{}(stmt);
     duration = runtime;
     count++;
