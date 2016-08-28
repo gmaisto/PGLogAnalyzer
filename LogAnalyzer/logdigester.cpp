@@ -39,53 +39,53 @@ void digester::digest()
 	std::regex rx("duration: (\\d+\\.\\d+) ms.+statement: (.+)");
 
 	for ( auto filename : logs )
-	{
-		std::ifstream file(filename);
+    {
+      std::ifstream file(filename);
 
-		while (file && getline(file, linebuffer))
-		{
-			if (linebuffer.length() == 0)continue;
-			if (boost::algorithm::starts_with(linebuffer, "LOG"))
-			{
-				if (newline == false)
-				{
+      while (file && getline(file, linebuffer))
+        {
+          if (linebuffer.length() == 0)continue;
+          if (boost::algorithm::starts_with(linebuffer, "LOG"))
+            {
+              if (newline == false)
+                {
 
-					std::string str = std::regex_replace(fulline, expr, fmt);
+                  std::string str = std::regex_replace(fulline, expr, fmt);
 
 
-					if (std::regex_search(str.c_str(), res, rx))
-					{
+                  if (std::regex_search(str.c_str(), res, rx))
+                    {
 
-						float rt = std::stof(res[1]);
-						Statement st(res[2], rt);
-						// std::size_t _chash = st.getHash();
+                      float rt = std::stof(res[1]);
+                      Statement st(res[2], rt);
+                      // std::size_t _chash = st.getHash();
 
-						if (!digestMap.count(res[2]))
-						{
-							Tuple::Tuple _tuple(st);
-							_tuple.addOneToCount();
-							_tuple.addTiming(rt);
-							digestMap[res[2]] = _tuple;
-						}
-						else
-						{
-							digestMap[res[2]].addOneToCount();
-							digestMap[res[2]].addTiming(rt);
-						}
-					}
-				}
-				newline = true;
-				fulline = linebuffer;
-				lines++;
-			}
-			else
-			{
-				fulline += linebuffer;
-				newline = false;
-			}
-		}
+                      if (!digestMap.count(res[2]))
+                        {
+                          Tuple::Tuple _tuple(st);
+                          _tuple.addOneToCount();
+                          _tuple.addTiming(rt);
+                          digestMap[res[2]] = _tuple;
+                        }
+                      else
+                        {
+                          digestMap[res[2]].addOneToCount();
+                          digestMap[res[2]].addTiming(rt);
+                        }
+                    }
+                }
+              newline = true;
+              fulline = linebuffer;
+              lines++;
+            }
+          else
+            {
+              fulline += linebuffer;
+              newline = false;
+            }
+        }
 
-	}
+    }
 	/*
 
 	  for ( auto filename : zlogs ) {
@@ -147,7 +147,7 @@ void digester::digest()
 
 
 	worked = true; // set the flag to true.
-    queries = digestMap.size();
+  queries = digestMap.size();
 
 	//  std::cout << "Lines found: " << lines << std::endl;
 	//  std::cout << "Map Elements: " << digestMap.size() << std::endl;
